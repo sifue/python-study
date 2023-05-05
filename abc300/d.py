@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 import math
-import bisect
+from bisect import bisect_left, bisect_right
 sys.setrecursionlimit(10**7) # 再起回数の設定
 N = int(input())
 
@@ -24,14 +24,22 @@ primes = sieve_of_eratosthenes(math.isqrt(math.ceil(N / 12))) # N / (2 * 2 * 3) 
 # print(len(primes))
 
 count = 0
-for i, a in enumerate(primes):
-    for j in range(i + 1, len(primes)):
-        c = primes[j]
-        if a * a * c * c > N:
-            continue
-        b_index = bisect.bisect_right(primes[i:j], N / (a * a * c * c))
-        # print("[a, b, b_index]", end="=")
+for c in primes:
+    if c * c > N:
+        break
+    for i, a in enumerate(primes):
+        if a >= c:
+            break
+
+        b = N // (a * a * c * c)
+
+        if b >= c:
+            b = c - 1 # bはc未満の数である必要があるので、許容できる最大で上書きする
+        if b <= a:
+            break
+        b_index = bisect_right(primes, b)
+        # print("[a, c, b_index]", end="=")
         # print([a, c, b_index])
-        if b_index > 1:
-            count += (b_index - 1)
+        count += (b_index - i - 1)
+
 print(count)
