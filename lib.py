@@ -45,3 +45,16 @@ def enumerate_primes(n):
     while primes[-1] > n:
         primes.pop()
     return primes
+
+# 二次元配列内で指定されたインデックスが範囲内かどうかを判断するメソッド 
+def is_valid_index(array, row, col):
+    num_rows = len(array)
+    num_cols = len(array[0])
+    
+    if 0 <= row < num_rows and 0 <= col < num_cols:
+        return True
+    else:
+        return False
+    
+# 8方向の移動を定義 一つ目の要素がx、二つ目の要素がy
+directions = [(1, 1), (0, 1), (-1, 1), (1, 0), (-1, 0), (1, -1), (0, -1), (-1, -1)]
