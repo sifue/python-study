@@ -7,3 +7,5 @@ N = int(input())
 A = list(map(int, input().split()))
 print(N)
 print(A)
+
+# すべての組み合わせで成立するLを全パターン探す問題
