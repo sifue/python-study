@@ -2,49 +2,41 @@ import sys
 import numpy as np
 import math
 import bisect
+from collections import deque
 sys.setrecursionlimit(10**7) # 再起回数の設定
 N = int(input())
 A = list(map(int, input().split()))
+A = sorted(A, reverse=True)
+no_split_A = deque(A)
+all_split_A = deque(A)
+result = []
 
+# 割れなかったものがあり
 maxA = max(A)
-candL = set()
-candL.add(maxA)
-for ai in A:
-    for aj in A:
-        candL.add(ai + aj)
-candL = sorted(list(candL))
 
+while len(no_split_A) > 0 and no_split_A[0] == maxA:
+    no_split_A.popleft() #Lを除く
+
+if len(no_split_A) % 2 == 0:
+    while len(no_split_A) >= 2 and no_split_A[0] + no_split_A[-1] == maxA:
+        no_split_A.pop()
+        no_split_A.popleft()
+if len(no_split_A) == 0:
+    result.append(maxA)
+
+# 全て割れている
+candL = all_split_A[0] + all_split_A[-1]
+#print("all_split_A")
+#print(all_split_A)
 #print("candL")
 #print(candL)
+if len(all_split_A) % 2 == 0:
+    while len(all_split_A) >= 2 and all_split_A[0] + all_split_A[-1] == candL:
+        all_split_A.pop()
+        all_split_A.popleft()
+if len(all_split_A) == 0:
+    result.append(candL)
 
-result = []
-for l in candL:
-    #print("l")
-    #print(l)
-    check_list = list(A)
-    is_found = True # 調査フラグ、未調査時はTrueでスタート
-    for i, a in enumerate(A):
-        if not check_list[i]: # すでに利用済みならパス
-            continue
-        #print("i")
-        #print(i)
-        check_list[i] = False
-        if a == l:
-            #print("continue")
-            continue
-        else:
-            is_found = False # 調査開始とともにFalseに
-            for j, ap in enumerate(A):
-                if check_list[j] and a + ap == l:
-                    check_list[j] = False
-                    is_found = True # ペア発見
-                    break
-            #print("is_found")
-            #print(is_found)
-            if not is_found:
-                break
-    if check_list.count(False) == N and is_found:
-        result.append(l)
 print(" ".join(map(str, result)))
 
 
